@@ -10,7 +10,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule } from '@angular/material/dialog';
-
+import { MatButtonModule } from '@angular/material/button'
 import { SharedModule } from './shared/shared.module';
 
 
@@ -28,7 +28,8 @@ import { SharedModule } from './shared/shared.module';
     MatListModule,
     MatToolbarModule,
     MatDialogModule,
-    SharedModule
+    SharedModule,
+    MatButtonModule
   ],
   providers: [ProductServices],
   bootstrap: [

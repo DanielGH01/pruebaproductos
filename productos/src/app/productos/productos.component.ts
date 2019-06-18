@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ProductServices } from '../providers/product-services.service';
 import { Producto } from './model/producto';
 import { ProgressbarComponent } from '../shared/progressbar/progressbar.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewimageComponent } from '../shared/viewimage/viewimage.component';
+import { MatSelectionList } from '@angular/material/list';
 
 @Component({
   selector: 'app-productos',
@@ -13,8 +14,11 @@ import { ViewimageComponent } from '../shared/viewimage/viewimage.component';
 export class ProductosComponent implements OnInit {
 
   productos: Producto[];
+  seleccionados: Producto[];
+  @ViewChild('productosSelect', { static: false }) productosSelect;
   constructor(private service: ProductServices, public dialog: MatDialog, public dialogImage: MatDialog) {
     this.productos = new Array<Producto>();
+    this.seleccionados = new Array<Producto>();
   }
 
   ngOnInit() {
@@ -31,7 +35,8 @@ export class ProductosComponent implements OnInit {
 
   openImage(item: Producto): void {
     const dialogRefImg = this.dialogImage.open(ViewimageComponent, {
-      width: '250px',
+      width: 'auto',
+      height: 'auto',
       data: item
     });
 
@@ -50,5 +55,13 @@ export class ProductosComponent implements OnInit {
     });
   }
 
+  hacerPedido() {
+    this.seleccionados = new Array<Producto>();
+    (this.productosSelect.selectedOptions.selected as any[]).forEach(item => {
+      this.seleccionados.push((item.value as Producto));
+    });
+
+    localStorage.setItem('productosSeleccionados', JSON.stringify(this.seleccionados));
+  }
 
 }
