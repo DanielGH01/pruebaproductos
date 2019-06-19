@@ -4,7 +4,7 @@ import { Producto } from './model/producto';
 import { ProgressbarComponent } from '../shared/progressbar/progressbar.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewimageComponent } from '../shared/viewimage/viewimage.component';
-import { MatSelectionList } from '@angular/material/list';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-productos',
@@ -16,7 +16,10 @@ export class ProductosComponent implements OnInit {
   productos: Producto[];
   seleccionados: Producto[];
   @ViewChild('productosSelect', { static: false }) productosSelect;
-  constructor(private service: ProductServices, public dialog: MatDialog, public dialogImage: MatDialog) {
+  constructor(private service: ProductServices,
+    public dialog: MatDialog, public dialogImage: MatDialog,
+    public router: Router
+  ) {
     this.productos = new Array<Producto>();
     this.seleccionados = new Array<Producto>();
   }
@@ -39,29 +42,24 @@ export class ProductosComponent implements OnInit {
       height: 'auto',
       data: item
     });
-
-    dialogRefImg.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
   }
 
   openDialogProgress(): void {
     const dialogRef = this.dialog.open(ProgressbarComponent, {
       width: '250px'
     });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
   }
 
   hacerPedido() {
+    this.openDialogProgress();
     this.seleccionados = new Array<Producto>();
     (this.productosSelect.selectedOptions.selected as any[]).forEach(item => {
       this.seleccionados.push((item.value as Producto));
     });
 
     localStorage.setItem('productosSeleccionados', JSON.stringify(this.seleccionados));
+    this.dialog.closeAll();
+    this.router.navigateByUrl('/pedidos/lista');
   }
 
 }
